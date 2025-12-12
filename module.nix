@@ -1,4 +1,4 @@
-{ self, lib, pkgs, config, ... }:
+{ lib, pkgs, config, ... }:
 let
   cfg = lib.getAttrFromPath ["services" "stratos-fish"] config;
 in {
