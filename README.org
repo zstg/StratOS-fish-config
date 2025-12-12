@@ -1,14 +1,14 @@
 * Add this to flake.nix:
 #+BEGIN_SRC bash
-stratos-fish.url = "github:StratOS-Linux/StratOS-fish-config";
-#+END_SRC
-
-
-then something like this in your home-manager-config:
-#+BEGIN_SRC bash
 {
-  imports = [ inputs.stratos-fish.homeManagerModules.default ];
+  inputs.stratos-fish.url = "github:zstg/StratOS-fish-config";
   
-  services.stratos-fish.enable = true;
+  outputs = { self, nixpkgs, stratos-fish, ... }: {
+    nixosSystem = {
+      modules = [
+        stratos-fish.nixosModules.default
+      ];
+    };
+  };
 }
 #+END_SRC
