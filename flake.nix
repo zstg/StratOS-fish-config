@@ -4,21 +4,20 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
   outputs = { self, nixpkgs }: {
-    nixosModules.default = { lib, pkgs, config, ... }: {
-      programs.fish = {
-        enable = true;
-        vendor.config.enable = true;
-        
-        # Symlink repo's .config/fish structure directly
-        configDir = lib.cleanSourceWith {
-          src = self + "/.config/fish";
-          filter = path: type:
-            lib.cleanSourceFilter path type &&
-            (builtins.baseNameOf path != "README.md") &&
-            (builtins.baseNameOf path != "flake.nix") &&
-            (builtins.baseNameOf path != "flake.lock") &&
-            (builtins.match ".*\.fish$" path != null || builtins.baseNameOf path == "conf.d" || builtins.baseNameOf path == "functions");
-        };
+    homeManagerModules.default = { lib, pkgs, config, ... }: {
+      programs.fish.enable = true;
+      
+      # Copy fish config files to user's config directory
+      home.file = let fishDir = self + "/.config/fish";
+      in {
+        ".config/fish/config.fish".source = fishDir + "/config.fish";
+        ".config/fish/aliases".source = fishDir + "/aliases";
+        ".config/fish/git.fish".source = fishDir + "/git.fish";
+        ".config/fish/convert_aliases_to_abbreviations.fish".source = fishDir + "/convert_aliases_to_abbreviations.fish";
+        ".config/fish/fisher.fish".source = fishDir + "/fisher.fish";
+        ".config/fish/fish_plugins".source = fishDir + "/fish_plugins";
+        ".config/fish/fish_variables".source = fishDir + "/fish_variables";
+        ".config/fish/functions".source = fishDir + "/functions";
       };
     };
   };
